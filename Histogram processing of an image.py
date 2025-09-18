@@ -1,51 +1,64 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:Write your code to find the histogram of gray scale image and color image channels
-
-
 import cv2
+import numpy as np
 import matplotlib.pyplot as plt
-gray_image = cv2.imread("gray image of flower.jpg")
-color_image = cv2.imread()
-cv2.imshow("Gray Image",gray_image)
-
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-
-# In[2]:Display the histogram of gray scale image and any one channel histogram from color image
-
-
-import matplotlib.pyplot as plt 
-grayscale_image=cv2.imread("gray image of flower.jpg")
-colourscale_image=cv2.imread("color image of flower.jpg")
-hist=cv2.calcHist(grayscale_image,[0],None,[255],[0,255])
-hist1=cv2.calcHist()
-plt.figure()
-plt.title("Histogram")
-plt.xlabel("")
-plt.ylabel("pixel count")
-plt.stem()
+img = cv2.imread('parrot.jpg', cv2.IMREAD_GRAYSCALE)
+plt.imshow(img, cmap='gray')
+plt.title('Original Image')
 plt.show()
 
+# Display the images
+plt.hist(img.ravel(),256,range = [0, 256])
+plt.title('Original Image')
+plt.show()
 
+# Equalize histogram
+img_eq = cv2.equalizeHist(img)
 
-# In[3]:Write the code to perform histogram equalization of the image. 
+# Display the images.
+plt.hist(img_eq.ravel(), 256, range = [0, 256])
+plt.title('Equalized Histogram')
 
+# Display the images.
+plt.imshow(img_eq, cmap='gray')
+plt.title('Original Image')
+plt.show()
 
+# Read the color image.
+img = cv2.imread('parrot.jpg', cv2.IMREAD_COLOR)
 
-import cv2
-import matplotlib.pyplot as plt 
-gi=cv2.imread("gray image of flower.jpg",0)
-colorscale=cv2.imread("color image of flower.jpg")
-g=cv2.resize(gi,(500,400))
-equ=cv2.equalizeHist(gi)
+# Convert to HSV.
+img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
+# Perform histogram equalization only on the V channel, for value intensity.
+img_hsv[:,:,2] = cv2.equalizeHist(img_hsv[:, :, 2])
 
+# Convert back to BGR format.
+img_eq = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR)
 
+plt.imshow(img_eq[:,:,::-1]) 
+plt.title('Equalized Image')
+plt.show()
 
+# Display the images.
+#plt.figure(figsize = (20,10))
+plt.subplot(221)
+plt.imshow(img[:, :, ::-1])
+plt.title('Original Color Image')
+plt.subplot(222)
+plt.imshow(img_eq[:, :, ::-1])
+plt.title('Equalized Image')
+plt.subplot(223)
+plt.hist(img.ravel(),256,range = [0, 256])
+plt.title('Original Image')
+plt.subplot(224)
+plt.hist(img_eq.ravel(),256,range = [0, 256])
+plt.title('Histogram Equalized');plt.show()
 
-
-
-
+# Display the histograms.
+plt.figure(figsize = [15,4])
+plt.subplot(121)
+plt.hist(img.ravel(),256,range = [0, 256])
+plt.title('Original Image')
+plt.subplot(122)
+plt.hist(img_eq.ravel(),256,range = [0, 256])
+plt.title('Histogram Equalized')
